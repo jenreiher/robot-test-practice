@@ -7,7 +7,7 @@ class Item
 		@weight = weight
 	end
 
-
-
-
+	def feed(who_to_feed)
+		who_to_feed.heal(20)
+	end
 end
