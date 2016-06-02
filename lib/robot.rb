@@ -1,15 +1,16 @@
 class Robot
 
-	attr_reader :position, :health
+	attr_reader :position, :health, :weight_carried, :items
+	attr_accessor :equipped_weapon
 
 	CAPACITY = 250
 
 	def initialize
 		@position = [0,0]
 		@items = []
-		@weight_carried = 0
 		@health = 100
 		@hitpoints = 5
+		@equipped_weapon = nil
 	end
 
 	def move_left
@@ -33,17 +34,25 @@ class Robot
 	end
 
 	def pick_up(item)
-		if item[1] < CAPACITY
+		if can_pickup?(item)
+			if item.is_a?(Weapon)
+				@equipped_weapon = item
+			end
 			items << item
 			return true
-		else
-			return false
 		end
 	end
 
-	def items_weight(item)
-		weight_of_item = item[1]
-		@weight_carried += weight_of_item
+	def can_pickup?(item)
+		(item.weight + items_weight) <= 250	
+	end
+
+	def items_weight
+		total_weight = 0
+		items.each do |item|
+			total_weight += item.weight
+		end
+		return total_weight
 	end
 
 	def wound(damage)
@@ -54,7 +63,11 @@ class Robot
 	end
 
 	def attack(enemy)
-		enemy.wound(@hitpoints)
+		if @equipped_weapon == nil then 
+			enemy.wound(@hitpoints)
+		elsif
+			@equipped_weapon.hit(enemy)
+		end
 	end
 
 	def heal(healing_power)
@@ -63,7 +76,5 @@ class Robot
 			@health =100
 		end
 	end
-
-
 
 end

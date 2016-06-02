@@ -9,7 +9,7 @@ describe PlasmaCannon do
     expect(@plasma_cannon).to be_a(Weapon)
   end
 
-  it "should be called 'Plasma Cannon'" do
+ it "should be called 'Plasma Cannon'" do
     expect(@plasma_cannon.name).to eq('Plasma Cannon')
   end
 
@@ -19,5 +19,5 @@ describe PlasmaCannon do
 
   it "should do 55 damage" do
     expect(@plasma_cannon.damage).to eq(55)
-  end
+  end 
 end
