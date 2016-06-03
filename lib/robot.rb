@@ -44,7 +44,7 @@ class Robot
 	end
 
 	def can_pickup?(item)
-		(item.weight + items_weight) <= 250	
+		(item.weight + items_weight) <= CAPACITY	
 	end
 
 	def items_weight
@@ -63,18 +63,30 @@ class Robot
 	end
 
 	def attack(enemy)
-		if @equipped_weapon == nil then 
-			enemy.wound(@hitpoints)
-		elsif
-			@equipped_weapon.hit(enemy)
+		if (enemy.position[1] == (self.position[1] + 1)) || (enemy.position[1] == (self.position[1] - 1 )) 
+			if @equipped_weapon == nil then 
+				enemy.wound(@hitpoints)
+			elsif
+				@equipped_weapon.hit(enemy)
+			end
 		end
+		return false
 	end
 
 	def heal(healing_power)
 		@health += healing_power
 		if @health > 100
-			@health =100
+			@health = 100
 		end
+	end
+
+	def heal!(healing_power)
+		if @health < 0
+			raise "Zombie robots not allowed!"
+		else
+			@health += healing_power
+		end
+
 	end
 
 end
