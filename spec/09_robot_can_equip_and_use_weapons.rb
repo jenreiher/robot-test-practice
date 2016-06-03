@@ -3,6 +3,7 @@ require_relative 'spec_helper'
 describe Robot do
   before :each do
     @robot = Robot.new
+    @robot.move_up
   end
 
   describe "#equipped_weapon" do

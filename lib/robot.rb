@@ -36,10 +36,19 @@ class Robot
 	def pick_up(item)
 		if can_pickup?(item)
 			if item.is_a?(Weapon)
-				@equipped_weapon = item
+				#if item.is_a?(Grenade)
+					@equipped_weapon = item
+					items << item
+					return true
+				#end
+			elsif @health <= 80 && item.is_a?(BoxOfBolts)
+				item.feed(self)
+				items << item
+				return true
+			else
+				items << item
+				return true
 			end
-			items << item
-			return true
 		end
 	end
 
@@ -63,14 +72,38 @@ class Robot
 	end
 
 	def attack(enemy)
-		if (enemy.position[1] == (self.position[1] + 1)) || (enemy.position[1] == (self.position[1] - 1 )) 
-			if @equipped_weapon == nil then 
-				enemy.wound(@hitpoints)
-			elsif
+
+		if weapon_equipped?
+
+			if is_equipped_grenade? && (enemy.position[1] == (self.position[1] + 2)) || (enemy.position[1] == (self.position[1] - 2 ))
+				@equipped_weapon.hit(enemy)
+				@equipped_weapon = nil
+				return true	
+			elsif !is_equipped_grenade? && (enemy.position[1] == (self.position[1] + 1)) || (enemy.position[1] == (self.position[1] - 1 ))
 				@equipped_weapon.hit(enemy)
 			end
+
+		elsif !weapon_equipped?
+
+			if (enemy.position[1] == (self.position[1] + 1)) || (enemy.position[1] == (self.position[1] - 1 ))
+				enemy.wound(@hitpoints)
+				return true
+			else
+				return false
+			end			
+
 		end
+
 		return false
+
+	end
+
+	def weapon_equipped?
+		@equipped_weapon != nil
+	end
+
+	def is_equipped_grenade?
+		@equipped_weapon.is_a?(Grenade)
 	end
 
 	def heal(healing_power)
