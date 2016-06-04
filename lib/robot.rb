@@ -1,6 +1,6 @@
 class Robot
 
-	attr_reader :position, :health, :weight_carried, :items
+	attr_reader :position, :weight_carried, :items, :health
 	attr_accessor :equipped_weapon
 
 	CAPACITY = 250
@@ -12,6 +12,7 @@ class Robot
 		@hitpoints = 5
 		@equipped_weapon = nil
 	end
+
 
 	def move_left
 		position[0] -= 1
@@ -34,22 +35,36 @@ class Robot
 	end
 
 	def pick_up(item)
+		# try to pickup the item
 		if can_pickup?(item)
+			# the item was not too heavy :)
+			@items << item
+			# the item is picked up
+
 			if item.is_a?(Weapon)
-				#if item.is_a?(Grenade)
+				# the item was a weapon :)
 					@equipped_weapon = item
-					items << item
-					return true
-				#end
-			elsif @health <= 80 && item.is_a?(BoxOfBolts)
-				item.feed(self)
-				items << item
-				return true
-			else
-				items << item
-				return true
+					# the weapon was properly equipped
 			end
+
+			if item.is_a?(BoxOfBolts) 
+				# the item is b.o.b.
+				if health <= 80
+					# check if the health is high enough to heal
+					item.feed(self)
+					# feed the robot the bolts
+					#return true
+				end
+				
+			end
+
+			return true
+
+		else 
+			return false
+			# the item was too heavy :()
 		end
+
 	end
 
 	def can_pickup?(item)
